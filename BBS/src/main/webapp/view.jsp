@@ -108,6 +108,9 @@
 					</tr>
 				</thead>
 				<tbody>
+				<%
+						String[] array = bbs.getBbsTag().split("#");						
+				%>
 					<tr>
 						<td style="width:20%;">글 제목</td>
 						<td colspan="2"><%= bbs.getBbsTitle().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;".replaceAll("\n", "<br>;'"))%></td>
@@ -123,7 +126,12 @@
 					<tr>
 						<td>내용</td>
 						<td colspan="2" style="min-height: 200px; text-align: Left"><%=bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")%></td>
-					</tr>										
+					</tr>
+					<tr>
+						<td>태그</td>
+						<td colspan="2"><%for(int i=1;i<array.length;i++) { %> <a href="bbs.jsp?searchText=<%=array[i]%>&search=bbsTag"><%=" #" + array[i]%></a><%}%></td>
+					</tr>
+														
 				</tbody>				
 			</table>
 			<a href="bbs.jsp?searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>" class="btn btn-primary">목록</a>

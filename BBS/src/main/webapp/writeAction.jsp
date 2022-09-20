@@ -13,7 +13,14 @@
 <title>Insert title here</title>
 </head>
 <body>
+
 		<%
+		String tags = new String();
+		tags += request.getParameter("bbsTag1");
+		tags += request.getParameter("bbsTag2");
+		tags += request.getParameter("bbsTag3");
+		tags += request.getParameter("bbsTag4");
+		tags += request.getParameter("bbsTag5");
 		String userID = null;
 		if(session.getAttribute("userID") != null) {
 			userID = (String) session.getAttribute("userID");
@@ -32,20 +39,20 @@
 			script.println("history.back()");
 			script.println("</script>");
 		} else {
-			BbsDAO bbsDAO = new BbsDAO();
-			int result = bbsDAO.write(bbs.getBbsTitle(), userID, bbs.getBbsContent());
+			BbsDAO bbsDAO = new BbsDAO();						
+			int result = bbsDAO.write(bbs.getBbsTitle(), userID, bbs.getBbsContent(), tags);
 			if(result == - 1) {	
-				PrintWriter script = response.getWriter();
+				PrintWriter script = response.getWriter(); 
 				script.println("<script>");
 				script.println("alert('글쓰기에 실패했습니다.')");
 				script.println("history.back()");
 				script.println("</script>");
 			} else {						
-				PrintWriter script = response.getWriter();
+				PrintWriter script = response.getWriter(); 
 				script.println("<script>");
 				script.println("location.href = 'bbs.jsp'");
 				script.println("</script>");			
-			} 
+			} 		
 		
 		}
 	}

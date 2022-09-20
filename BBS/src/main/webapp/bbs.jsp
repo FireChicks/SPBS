@@ -150,6 +150,7 @@
 					<option value="bbsContent">글 내용</option>
 					<option value="bbsID">글 번호</option>
 					<option value="userID">작성자 검색</option>
+					<option value="bbsTag">태그 검색</option>
 				</select> 				
 				<input name="searchText" type="text"  value=<%=searchText%>>
 				<input type="submit" class="btn btn-primary" value="검색">

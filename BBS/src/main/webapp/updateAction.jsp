@@ -12,6 +12,12 @@
 </head>
 <body>
 		<%
+		String tags = new String();
+		tags += request.getParameter("bbsTag1");
+		tags += request.getParameter("bbsTag2");
+		tags += request.getParameter("bbsTag3");
+		tags += request.getParameter("bbsTag4");
+		tags += request.getParameter("bbsTag5");
 		String userID = null;
 		if(session.getAttribute("userID") != null) {
 			userID = (String) session.getAttribute("userID");
@@ -53,7 +59,7 @@
 				script.println("</script>");
 			} else {
 			BbsDAO bbsDAO = new BbsDAO();
-			int result = bbsDAO.update(bbsID, request.getParameter("bbsTitle"), request.getParameter("bbsContent"));
+			int result = bbsDAO.update(bbsID, request.getParameter("bbsTitle"), request.getParameter("bbsContent"), tags);
 			if(result == - 1) {	
 				PrintWriter script = response.getWriter();
 				script.println("<script>");

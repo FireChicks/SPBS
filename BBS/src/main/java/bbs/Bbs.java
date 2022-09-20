@@ -6,6 +6,16 @@ public class Bbs {
 	private String userID;
 	private String bbsDate;
 	private String bbsContent;
+	private String bbsTag;
+	
+	
+	public String getBbsTag() {
+		return bbsTag;
+	}
+	public void setBbsTag(String bbsTag) {
+		this.bbsTag = bbsTag;
+	}
+	
 	private int bbsAvailable;
 	
 	public int getBbsID() {
