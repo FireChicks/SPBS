@@ -145,12 +145,12 @@
 			<a href="write.jsp" class="btn btn-primary pull-right">글쓰기</a> 			
 			<div style="display: flex; justify-content: center;" class="btn btn-priamary">
 			<form action = "bbs.jsp">
-				<select name="search" id="searchOption" class="form-select" aria-label="Default select example">
-					<option value="bbsTitle">글 제목</option>
-					<option value="bbsContent">글 내용</option>
-					<option value="bbsID">글 번호</option>
-					<option value="userID">작성자 검색</option>
-					<option value="bbsTag">태그 검색</option>
+				<select name="search" id="searchOption" class="form-select" aria-label="Default select example" onChange={this.onChange.bind(this)}>
+					<option value="bbsTitle" <%if(search != null){ if(search.matches("bbsTitle")) {%> <%="selected"%> <%} else {%> <%=""%> <%}}%> >글 제목</option>
+					<option value="bbsContent" <%if(search != null){ if(search.matches("bbsContent")){%><%="selected"%> <%} else{%> <%=""%> <%}}%> >글 내용</option>
+					<option value="bbsID" <%if(search != null){ if(search.matches("bbsID")){%><%="selected"%> <%} else{%> <%=""%> <%}}%> >글 번호</option>
+					<option value="userID" <%if(search != null){ if(search.matches("userID")){%><%="selected"%> <%} else{%> <%=""%> <%}}%> >작성자 검색</option>
+					<option value="bbsTag" <%if(search!= null ){ if(search.matches("bbsTag")){%><%="selected"%> <%} else{%> <%=""%> <%}}%> >태그 검색</option>
 				</select> 				
 				<input name="searchText" type="text"  value=<%=searchText%>>
 				<input type="submit" class="btn btn-primary" value="검색">

@@ -132,6 +132,8 @@
 						   			document.getElementById('bbsTag4').value = "";
 						   		} else if (this.innerHTML == tag_5.innerHTML){
 						   			document.getElementById('bbsTag5').value = "";
+						   		} else {
+						   			alert('오류발생');
 						   		}						   		
 						   		this.innerHTML = "";	
 						   	}
@@ -182,15 +184,15 @@
 						 		var str4 = document.getElementById('tag_4').innerHTML;
 						 		var str5 = document.getElementById('tag_5').innerHTML;						 		
 						 		
-						 		if(document.getElementById('tag_1').innerHTML == document.getElementById('tag_6').innerHTML) {
+						 		if(document.getElementById('tag_1').innerHTML == document.getElementById('tag_6').innerHTML || document.getElementById('tag_1').innerHTML == "") {
 						    		tagIndex = 1;
-						    	}else if (document.getElementById('tag_2').innerHTML == document.getElementById('tag_6').innerHTML) {
+						    	}else if (document.getElementById('tag_2').innerHTML == document.getElementById('tag_6').innerHTML || document.getElementById('tag_2').innerHTML == "") {
 						    		tagIndex = 2;
-						    	}else if (document.getElementById('tag_3').innerHTML == document.getElementById('tag_6').innerHTML) {
+						    	}else if (document.getElementById('tag_3').innerHTML == document.getElementById('tag_6').innerHTML || document.getElementById('tag_3').innerHTML == "") {
 						    		tagIndex = 3;
-						    	}else if (document.getElementById('tag_4').innerHTML == document.getElementById('tag_6').innerHTML) {
+						    	}else if (document.getElementById('tag_4').innerHTML == document.getElementById('tag_6').innerHTML || document.getElementById('tag_4').innerHTML == "") {
 						    		tagIndex = 4;
-						    	}else if (document.getElementById('tag_5').innerHTML == document.getElementById('tag_6').innerHTML) {
+						    	}else if (document.getElementById('tag_5').innerHTML == document.getElementById('tag_6').innerHTML || document.getElementById('tag_5').innerHTML == "") {
 						    		tagIndex = 5;
 						    	} else {
 						    		tagIndex = 6;
