@@ -16,11 +16,10 @@
 
 		<%
 		String tags = new String();
-		tags += request.getParameter("bbsTag1");
-		tags += request.getParameter("bbsTag2");
-		tags += request.getParameter("bbsTag3");
-		tags += request.getParameter("bbsTag4");
-		tags += request.getParameter("bbsTag5");
+		for(int i=1; i<=5; i++ ) {
+			tags += request.getParameter("bbsTag" + i);
+		}
+		
 		String userID = null;
 		if(session.getAttribute("userID") != null) {
 			userID = (String) session.getAttribute("userID");

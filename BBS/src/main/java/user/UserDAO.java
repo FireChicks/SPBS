@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import bbs.Bbs;
 
 public class UserDAO {
 	
@@ -58,4 +61,43 @@ public class UserDAO {
 		}
 		return -1;
 	}
+	
+	public User getUserInfoList(String userID) {
+		String SQL = "SELECT * FROM user WHERE userID = ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, userID);
+			User user = new User();
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				user.setUserID(rs.getString(1));
+				user.setUserPassword(rs.getString(2));
+				user.setUserName(rs.getString(3));
+				user.setUserGender(rs.getString(4));
+				user.setUserEmail(rs.getString(5));
+				user.setUserProfile(rs.getString(6));
+				user.setUserProfilePath(rs.getString(7));
+			}
+			return user;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	  public int update(String userID, String userName, String userEmail) {
+		  String SQL = "UPDATE user SET userName = ?, userEmail = ? Where userID = ?";
+			try {
+				PreparedStatement pstmt = conn.prepareStatement(SQL);
+				pstmt.setString(1, userName);
+				pstmt.setString(2, userEmail);
+				pstmt.setString(3, userID);
+				return pstmt.executeUpdate();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
+	  }
+	 
 }

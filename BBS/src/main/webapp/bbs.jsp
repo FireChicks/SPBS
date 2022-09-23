@@ -4,6 +4,8 @@
 <%@ page import="bbs.BbsDAO" %>
 <%@ page import="bbs.Bbs" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="user.UserDAO" %>
+<%@ page import="user.User" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,14 +81,22 @@
 				
 				<%
 					} else {
+						User user = new UserDAO().getUserInfoList(userID);
 				%>
+						<ul class="nav navbar-nav navbar-right">
+				<li>
+					<img src="<%=user.getUserProfilePath()%>" width="50px" height="50px" alt="프로필" title="프로필" >
+				</li>
+				</ul>
 						<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"
 							data-toggle="dropdown" role="button" aria-haspopup="true"
 							aria-expanded="false">회원관리<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li> <a href="logoutAction.jsp">로그아웃</a></li>
+							<li> <a href="profile.jsp">프로필 수정</a> </li>
+							<li> <a href="profileImage.jsp">이미지 수정</a> </li>
+							<li> <a href="logoutAction.jsp">로그아웃</a></li>							
 						</ul>
 					</li>
 				</ul>

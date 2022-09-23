@@ -3,6 +3,8 @@
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="bbs.Bbs" %>
 <%@ page import="bbs.BbsDAO" %>
+<%@ page import="user.UserDAO" %>
+<%@ page import="user.User" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,20 +84,26 @@
 				
 				<%
 					} else {
+						
+					}User user = new UserDAO().getUserInfoList(userID);
 				%>
-						<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" role="button" aria-haspopup="true"
-							aria-expanded="false">회원관리<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li> <a href="logoutAction.jsp">로그아웃</a></li>
-						</ul>
-					</li>
-				</ul>
-				<%		
-					}
-				%>				
+					<ul class="nav navbar-nav navbar-right">
+			<li>
+				<img src="<%=user.getUserProfilePath()%>" width="50px" height="50px" alt="프로필" title="프로필" >
+			</li>
+			</ul>
+					<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false">회원관리<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li> <a href="profile.jsp">프로필 수정</a> </li>
+						<li> <a href="profileImage.jsp">이미지 수정</a> </li>
+						<li> <a href="logoutAction.jsp">로그아웃</a></li>							
+					</ul>
+				</li>
+			</ul>				
 		</div>
 	</nav>
 	<div class="container">
@@ -131,6 +139,20 @@
 						<td>태그</td>
 						<td colspan="2"><%for(int i=1;i<array.length;i++) { %> <a href="bbs.jsp?searchText=<%=array[i]%>&search=bbsTag"><%=" #" + array[i]%></a><%}%></td>
 					</tr>
+					<form>
+					<tr>
+						<td colspan="3"><textarea class="form-control" placeholder="댓글을 입력해주세요." name="comContent" id="comContent" maxlength="500"  style="resize: none; width:100%;"></textarea><input type="submit" class="btn btn-primary pull-right" value="댓글 작성"/></td>
+					</tr>
+					</form>
+					
+				    <tr>
+						<td rowspan="2" style="text-align:center"  >댓글</td>
+						<td colspan="1">작성자 : dldi1021 </td>
+						<td>작성 시간 2022-09-21 오후 08:16 </td>
+					</tr>
+					<tr>					
+						<td  rowspan="4" colspan="2">글 내용</td>
+					</tr> 
 														
 				</tbody>				
 			</table>
