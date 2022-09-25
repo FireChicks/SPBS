@@ -131,7 +131,7 @@
 					%>
 					<tr>
 						<td><%= bbsList.get(i).getBbsID()%></td>
-						<td><a href="view.jsp?searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>&bbsID=<%=bbsList.get(i).getBbsID() %>"><%= bbsList.get(i).getBbsTitle().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;".replaceAll("\n", "<br>")) %></a></td>
+						<td><a href="view.jsp?searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>&bbsID=<%=bbsList.get(i).getBbsID() %>"><%= bbsList.get(i).getBbsTitle().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>") %></a></td>
 						<td><a href="bbs.jsp?searchText=<%=bbsList.get(i).getUserID()%>&search=userID"><%= bbsList.get(i).getUserID() %></a></td>
 						<td><%= bbsList.get(i).getBbsDate().substring(0,11) + bbsList.get(i).getBbsDate().substring(11, 13) + "시" + bbsList.get(i).getBbsDate().substring(14, 16) + "분"   %> </td>
 					</tr>

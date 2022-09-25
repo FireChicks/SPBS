@@ -1,3 +1,6 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="comment.CommentDAO"%>
+<%@page import="comment.Comment"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter" %>
@@ -20,11 +23,19 @@
 		if(session.getAttribute("userID") != null) {
 			userID = (String) session.getAttribute("userID");
 		}
+		boolean updateComment = false;
 		
 		int bbsID = 0;
 		if (request.getParameter("bbsID") != null) {
 				bbsID = Integer.parseInt(request.getParameter("bbsID"));
 		}
+		
+		int comID = 0;
+		if (request.getParameter("comID") != null) {
+				comID = Integer.parseInt(request.getParameter("comID"));
+				updateComment = true;
+		}
+		
 		if(bbsID == 0) {
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
@@ -32,6 +43,10 @@
 			script.println("location.href = 'bbs.jsp'");
 			script.println("</script>");
 		}
+		int comPage = 1;
+		if (request.getParameter("comPage") != null) {
+			comPage = Integer.parseInt(request.getParameter("comPage"));
+	}
 		
 		int pageNumber = 1;
 		if(request.getParameter("pageNumber") != null) {
@@ -39,7 +54,7 @@
 		}
 		
 		Bbs bbs = new BbsDAO().getBbs(bbsID);
-		
+		User bbsuser = new UserDAO().getUserInfoList(bbs.getUserID());
 		String searchText = "";
 		String search = null;
 		boolean searchBbs = false;
@@ -47,7 +62,7 @@
 			searchBbs = true;
 			search = request.getParameter("search");
 			searchText = request.getParameter("searchText");
-		}
+		}		
 	%>
 	
 	<nav class="navbar navbar-default">
@@ -85,7 +100,7 @@
 				<%
 					} else {
 						
-					}User user = new UserDAO().getUserInfoList(userID);
+					User user = new UserDAO().getUserInfoList(userID);
 				%>
 					<ul class="nav navbar-nav navbar-right">
 			<li>
@@ -103,7 +118,8 @@
 						<li> <a href="logoutAction.jsp">로그아웃</a></li>							
 					</ul>
 				</li>
-			</ul>				
+			</ul>
+			<%} %>				
 		</div>
 	</nav>
 	<div class="container">
@@ -111,7 +127,7 @@
 			<table class="table table-stirped" style="text-align: center; border: 1px solid #dddddd">
 				<thead>
 					<tr>
-						<th colspan="3" style="background-color: #eeeeee; text-align: center;">게시판 글보기</th>
+						<th colspan="6" style="background-color: #eeeeee; text-align: center;">게시판 글보기</th>
 						
 					</tr>
 				</thead>
@@ -121,39 +137,73 @@
 				%>
 					<tr>
 						<td style="width:20%;">글 제목</td>
-						<td colspan="2"><%= bbs.getBbsTitle().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;".replaceAll("\n", "<br>;'"))%></td>
+						<td colspan="5"><%= bbs.getBbsTitle().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;".replaceAll("\n", "<br>;'"))%></td>
 					</tr>
 					<tr>
-						<td>작성자</td>
-						<td colspan="2"><%= bbs.getUserID() %></td>
+						<td style="vertical-align : middle;" >작성자</td>
+						<td colspan="2" style="text-align : left;"><img src="<%=bbsuser.getUserProfilePath()%>" width="50px" height="50px" alt="프로필" title="프로필" ></td>
+						<td colspan="4"  style="vertical-align : middle;"><%= bbs.getUserID() %></td>
 					</tr>
 					<tr>
 						<td>작성일자</td>
-						<td colspan="2"><%= bbs.getBbsDate().substring(0,11) + bbs.getBbsDate().substring(11, 13) + "시" + bbs.getBbsDate().substring(14, 16) + "분" %></td>
+						<td colspan="5"><%= bbs.getBbsDate().substring(0,11) + bbs.getBbsDate().substring(11, 13) + "시" + bbs.getBbsDate().substring(14, 16) + "분" %></td>
 					</tr>
 					<tr>
 						<td>내용</td>
-						<td colspan="2" style="min-height: 200px; text-align: Left"><%=bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")%></td>
+						<td colspan="5" style="min-height: 200px; text-align: Left"><%=bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")%></td>
 					</tr>
 					<tr>
 						<td>태그</td>
-						<td colspan="2"><%for(int i=1;i<array.length;i++) { %> <a href="bbs.jsp?searchText=<%=array[i]%>&search=bbsTag"><%=" #" + array[i]%></a><%}%></td>
+						<td colspan="5"><%for(int i=1;i<array.length;i++) { %> <a href="bbs.jsp?searchText=<%=array[i]%>&search=bbsTag"><%=" #" + array[i]%></a><%}%></td>
 					</tr>
-					<form>
-					<tr>
-						<td colspan="3"><textarea class="form-control" placeholder="댓글을 입력해주세요." name="comContent" id="comContent" maxlength="500"  style="resize: none; width:100%;"></textarea><input type="submit" class="btn btn-primary pull-right" value="댓글 작성"/></td>
-					</tr>
-					</form>
-					
-				    <tr>
-						<td rowspan="2" style="text-align:center"  >댓글</td>
-						<td colspan="1">작성자 : dldi1021 </td>
-						<td>작성 시간 2022-09-21 오후 08:16 </td>
-					</tr>
+					<%if(!updateComment) { %>
+					<form  method="post" action="commentAction.jsp?bbsID=<%=bbsID%>&searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>">
 					<tr>					
-						<td  rowspan="4" colspan="2">글 내용</td>
+						<td colspan="6"><textarea class="form-control" placeholder="댓글을 입력해주세요." name="comContent" id="comContent" maxlength="500"  style="resize: none; width:100%;"></textarea><input type="submit" class="btn btn-primary pull-right" value="댓글 작성"/></td>					
+					</tr>					
+					</form>
+					<% } else { 
+					CommentDAO upComDAO = new CommentDAO();
+					String upCom = upComDAO.getContent(comID);%>
+					<form  method="post" action="updateComAction.jsp?comPage=<%=comPage%>&comID=<%=comID%>&bbsID=<%=bbsID%>&searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>">
+					<tr>					
+						<td colspan="6"><textarea class="form-control" placeholder="댓글을 입력해주세요." name="comContent" id="comContent" maxlength="500"  style="resize: none; width:100%;"><%=upCom%></textarea><input type="submit" class="btn btn-primary pull-right" value="댓글 작성"/></td>					
+					</tr>					
+					</form>
+					<%} %>
+					<% 						
+						CommentDAO comDAO = new CommentDAO();
+						ArrayList<Comment> comList = comDAO.getList(comPage, bbsID);
+						for(int i=0; i < comList.size(); i++) {
+							User comUser = new UserDAO().getUserInfoList(comList.get(i).getUserID());
+					%>
+				    <tr>
+						<td rowspan="2" style="vertical-align : middle;"  >댓글 <%if(userID != null && userID.equals(comUser.getUserID())) {%> <br><a href="view.jsp?bbsID=<%=bbsID%>&comID=<%=comList.get(i).getComID()%>&searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>&comPage=<%=comPage%>" >수정</a> 
+																																				  <a href="deleteComAction.jsp?bbsID=<%=bbsID%>&comID=<%=comList.get(i).getComID()%>&searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>&comPage=<%=comPage%>">삭제</a> <%} %></td>
+						<td colspan="1" style="text-align : left;"><img src="<%=comUser.getUserProfilePath()%>" width="50px" height="50px" alt="프로필" title="프로필"></td>
+						<td colspan="3" style="vertical-align : middle;"> 작성자 : <%=comList.get(i).getUserID()%> </td>
+						<td style="vertical-align : middle;"> <%=comList.get(i).getComDate()%></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="vertical-align : middle; text=align:center"  >댓글 내용</td>					
+						<td colspan="4"> <%=comList.get(i).getComContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")%></td>
 					</tr> 
-														
+					<%}%>
+				<tr>
+					<td colspan="6" style="text-align: left;">
+					<%
+					if(comPage != 1) {
+					%>
+					<a href="view.jsp?bbsID=<%=bbsID%>&searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>&comPage=<%=comPage - 1 %>" class="btn btn-success btn-arraw-Left">이전</a>
+					<%
+					} if(comDAO.nextPage(comPage, bbsID)) {
+					%>
+					<a href="view.jsp?bbsID=<%=bbsID%>&searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>&comPage=<%=comPage + 1 %>" class="btn btn-success btn-arraw-Left">다음</a>
+					<%
+					}
+					%>	
+					</td>
+				</tr>								
 				</tbody>				
 			</table>
 			<a href="bbs.jsp?searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>" class="btn btn-primary">목록</a>

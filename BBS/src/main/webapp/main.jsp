@@ -84,7 +84,7 @@
 		<div class="jumbotron">
 			<div class="container">
 				<h1>웹 사이트 소개</h1>
-				<p>이 사이트는 부트스트랩으로 만든 JSP 웹 사이트입니다. 유튜브 동빈나 강좌를 사용해서 개발하였고 디자인 템플릿으로 부트스트랩을 이용했습니다.</p>
+				<p>이 사이트는 부트스트랩으로 만든 JSP 웹 사이트입니다. 유튜브 동빈나 강좌를 참고해서 개발하였고 디자인 템플릿으로 부트스트랩을 이용했습니다.</p>
 				<a class="btn btn-primary btn-pull" href="#" role="button">자세히 알아보기</a>
 			</div>
 		</div>
