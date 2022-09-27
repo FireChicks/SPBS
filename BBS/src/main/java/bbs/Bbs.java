@@ -7,8 +7,36 @@ public class Bbs {
 	private String bbsDate;
 	private String bbsContent;
 	private String bbsTag;
+	private String bbsImageContent;
+	private String bbsImagePath;
+	private String bbsImageRealPath;
+	private String youtubeLink;
 	
 	
+	public String getYoutubeLink() {
+		return youtubeLink;
+	}
+	public void setYoutubeLink(String youtubeLink) {
+		this.youtubeLink = youtubeLink;
+	}
+	public String getBbsImageContent() {
+		return bbsImageContent;
+	}
+	public void setBbsImageContent(String bbsImageContent) {
+		this.bbsImageContent = bbsImageContent;
+	}
+	public String getBbsImagePath() {
+		return bbsImagePath;
+	}
+	public void setBbsImagePath(String bbsImagePath) {
+		this.bbsImagePath = bbsImagePath;
+	}
+	public String getBbsImageRealPath() {
+		return bbsImageRealPath;
+	}
+	public void setBbsImageRealPath(String bbsImageRealPath) {
+		this.bbsImageRealPath = bbsImageRealPath;
+	}
 	public String getBbsTag() {
 		return bbsTag;
 	}

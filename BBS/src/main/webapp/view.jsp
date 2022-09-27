@@ -52,6 +52,7 @@
 		if(request.getParameter("pageNumber") != null) {
 			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
 		}
+		int imgCount = 0;
 		
 		Bbs bbs = new BbsDAO().getBbs(bbsID);
 		User bbsuser = new UserDAO().getUserInfoList(bbs.getUserID());
@@ -63,6 +64,10 @@
 			search = request.getParameter("search");
 			searchText = request.getParameter("searchText");
 		}		
+		boolean youTubeExist = false;
+		if(bbs.getYoutubeLink() != null && !(bbs.getYoutubeLink().trim().isEmpty())) {
+			youTubeExist = true;
+		}
 	%>
 	
 	<nav class="navbar navbar-default">
@@ -133,7 +138,7 @@
 				</thead>
 				<tbody>
 				<%
-						String[] array = bbs.getBbsTag().split("#");						
+						String[] array = bbs.getBbsTag().split("#");				
 				%>
 					<tr>
 						<td style="width:20%;">글 제목</td>
@@ -150,11 +155,21 @@
 					</tr>
 					<tr>
 						<td>내용</td>
-						<td colspan="5" style="min-height: 200px; text-align: Left"><%=bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")%></td>
+						<td colspan="5" style="min-height: 200px; text-align: Left"><%if(youTubeExist) { %><iframe width="560" height="315" src="https://www.youtube.com/embed/<%=bbs.getYoutubeLink()%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br> <%} %>
+																					
+																					
+																					<%=bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")%> <br>
+																					<%	try{
+																						String[] imageContentArray =bbs.getBbsImageContent().split("#");						
+																						String[] ImagePathArray = bbs.getBbsImagePath().split("#");
+																						imgCount = ImagePathArray.length;
+																						for(int i=1; i<ImagePathArray.length; i++) {%> <img src="<%=ImagePathArray[ImagePathArray.length - i]%>" width="90%" height="90%" alt="프로필" title="프로필" > <br> <%= imageContentArray[i].replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>") %> <br>
+																					<%} } catch(Exception e) {}%>																	
+						</td>
 					</tr>
 					<tr>
 						<td>태그</td>
-						<td colspan="5"><%for(int i=1;i<array.length;i++) { %> <a href="bbs.jsp?searchText=<%=array[i]%>&search=bbsTag"><%=" #" + array[i]%></a><%}%></td>
+						<td colspan="5"><%for(int i=1;i<array.length;i++) { %> <a href="bbs.jsp?searchText=<%=array[i].trim()%>&search=bbsTag"><%=" #" + array[i]%></a><%}%></td>
 					</tr>
 					<%if(!updateComment) { %>
 					<form  method="post" action="commentAction.jsp?bbsID=<%=bbsID%>&searchText=<%=searchText%>&search=<%=search%>&pageNumber=<%= pageNumber%>">
@@ -210,7 +225,7 @@
 			<%
 				if(userID != null && userID.equals(bbs.getUserID())) {
 			%>
-				<a href="update.jsp?bbsID=<%= bbsID %>" class="btn btn-primary">수정</a>
+				<a href="update.jsp?bbsID=<%=bbsID%>&imgCount=<%=imgCount%>" class="btn btn-primary">수정</a>
 				<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?bbsID=<%= bbsID %>" class="btn btn-primary">삭제</a>
 			<% 		
 				}

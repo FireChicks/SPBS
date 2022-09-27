@@ -52,8 +52,8 @@ public class BbsDAO {
 		return -1;
 	}
 	
-	public int write(String bbsTitle, String userID, String bbsContent, String bbsTag) {
-		String SQL = "INSERT INTO BBS VALUE (?, ?, ?, ?, ?, ?, ?)";
+	public int write(String bbsTitle, String userID, String bbsContent, String bbsTag, String bbsImagePath, String bbsImageRealPath, String bbsImageContent, String youtbueLink) {
+		String SQL = "INSERT INTO BBS VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, getNext());
@@ -62,7 +62,11 @@ public class BbsDAO {
 			pstmt.setString(4, getDate());
 			pstmt.setString(5, bbsContent);
 			pstmt.setInt(6, 1);
-			pstmt.setString(7, bbsTag);						
+			pstmt.setString(7, bbsTag);
+			pstmt.setString(8, bbsImageContent);	
+			pstmt.setString(9, bbsImagePath);	
+			pstmt.setString(10, bbsImageRealPath);
+			pstmt.setString(11, youtbueLink);
 			return pstmt.executeUpdate();
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -135,6 +139,10 @@ public class BbsDAO {
 				bbs.setBbsContent(rs.getString(5));
 				bbs.setBbsAvailable(rs.getInt(6));
 				bbs.setBbsTag(rs.getString(7));
+				bbs.setBbsImageContent(rs.getString(8));
+				bbs.setBbsImagePath(rs.getString(9));
+				bbs.setBbsImageRealPath(rs.getString(10));
+				bbs.setYoutubeLink(rs.getString(11));
 				return bbs;
 			}
 		}catch(Exception e) {
@@ -143,14 +151,18 @@ public class BbsDAO {
 		return null;
 	}
 	
-	public int update(int bbsID, String bbsTitle, String bbsContent, String bbsTag) {
-		String SQL = "UPDATE BBS SET bbsTitle = ?, bbsContent = ?, bbsTag = ? Where bbsID = ?";
+	public int update(int bbsID, String bbsTitle, String bbsContent, String bbsTag, String bbsImagePath, String bbsImageRealPath, String bbsImageContent, String youtubeLink) {
+		String SQL = "UPDATE BBS SET bbsTitle = ?, bbsContent = ?, bbsTag = ?, bbsImageContent = ?, bbsImagePath = ?, bbsImageRealPath = ?, youtubeLink = ? Where bbsID = ?";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, bbsTitle);
 			pstmt.setString(2, bbsContent);
 			pstmt.setString(3, bbsTag);
-			pstmt.setInt(4, bbsID);
+			pstmt.setString(4, bbsImageContent);
+			pstmt.setString(5, bbsImagePath);
+			pstmt.setString(6, bbsImageRealPath);
+			pstmt.setString(7, youtubeLink);
+			pstmt.setInt(8, bbsID);
 			return pstmt.executeUpdate();
 		}catch(Exception e) {
 			e.printStackTrace();

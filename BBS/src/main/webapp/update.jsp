@@ -48,6 +48,13 @@
 			script.println("location.href = 'bbs.jsp'");
 			script.println("</script>");
 		}
+		int imgCount = 0;
+		if (request.getParameter("imgCount") != null) {
+			imgCount = Integer.parseInt(request.getParameter("imgCount"));			
+			imgCount--;						
+		}
+		
+				
 	%>
 	
 	<nav class="navbar navbar-default">
@@ -127,8 +134,8 @@
 
 		}
 		</script>
-		 <form name="write" method="post" action="updateAction.jsp?bbsID=<%=bbsID%>" onsubmit="return check()">		 
-			<table class="table table-stirped" style="text-align: center; border: 1px solid #dddddd">
+		 <form name="write" method="post" action="updateAction.jsp?bbsID=<%=bbsID%>&imgCount=<%=imgCount%>" enctype="multipart/form-data" onsubmit="return check()">		 
+			<table class="table table-stirped"  id="writeForm" style="text-align: center; border: 1px solid #dddddd">
 				<thead>
 					<tr>
 						<th colspan="2" style="background-color: #eeeeee; text-align: center;">게시판 글쓰기 양식</th>
@@ -273,7 +280,85 @@
 						    };
 						    						 
 						</script>								
-					</tr>														
+					</tr>
+					<tr>						
+						<td>
+								<input type="text" class="form-control" placeholder="유튜브 링크를 입력해주세요" name="youtubeLink" id="youtubeLink" maxlength="200" value="<%if(bbs.getYoutubeLink() != null) {%>https://youtube.com/<%=bbs.getYoutubeLink()%> <%}%>">
+							</td>
+					</tr>
+					<script>
+					var count = <%=imgCount%>;
+					if(count == -1) {
+						count = 0;
+					}
+					</script>
+					<script>
+										
+				     function addRow(){	
+					    if(count >= 10) {
+					    	alert("최대 이미지개수는 10개입니다.");
+					    	return;
+					    } else {
+					     var tableData = document.getElementById('writeForm');
+					     var row = tableData.insertRow(tableData.rows.length );
+					     
+					     var cell1 = row.insertCell(0);
+					     ++count;
+					     cell1.innerHTML = "<td><div style='text-align: left;'>"+ count +"번 이미지 첨부</div>"
+					     					+ "<input type='file' id='file"+ count + "' name='file"+ count + "' accept='image/*'> <br>"
+					     					+ "<div style='text-align:left;'><span style='color : Red;'>주의: 이미지를 첨부하지 않으면 글의 내용도 저장되지 않습니다.</span></div> <br>"
+					     					+ "<textarea class='form-control' placeholder='" + count  +"번째 이미지에 대한 설명을 입력해주세요. (최대 500자)' name='comContent"+ count + "' id='comContent"+ count + "' maxlength='500'  style='resize: none;'></textarea>"
+					     					+"</td>";
+					     					
+					    }
+					    				
+					} 					
+					</script>
+					<script>			    
+					    function delRow(){
+						    if(count <= 0) {
+						    	alert("최소 이미지 개수는 0개 입니다.");
+						    	return;
+						    } else {
+						     var tableData = document.getElementById('writeForm');
+						     tableData.deleteRow(tableData.rows.length-1); 
+						     count--;
+						     					
+						    }						    
+					  } 					
+					</script>
+					<tr>
+						<td>
+							<div style="text-align: left;"><input id="delROW" type="button" value="이미지 개수 제거" class="btn btn-primary pull-left" onclick="delRow();" />
+															<input id="addROW" type="button" value="이미지 개수 추가" class="btn btn-primary pull-left" onclick="addRow();" /> </div>
+						</td>
+					</tr>					
+					<% if(imgCount == 0) { %>						
+						<%} else { %>												
+							<%for(int i = 1; i <= imgCount; i++) { %>
+								<%
+								try{
+									String[] ImageContentArray  = bbs.getBbsImageContent().split("#");						
+									String[] ImagePathArray     = bbs.getBbsImagePath().split("#");
+									String[] ImageRealPathArray = bbs.getBbsImageRealPath().split("#");
+																	
+								%>
+								<tr>
+								<td>						
+								<div style="text-align: left;"><%=i%>번 이미지 첨부</div>
+						 		<div style="text-align: left;" ><img src="<%=ImagePathArray[imgCount - i + 1]%>" width="80px" height="80px" alt="디렉토리 오류"><a><%=ImageRealPathArray[imgCount - i + 1]%></a> </div>
+						 		<input type="hidden" id="file<%=i%>" name="file<%=i%>" value="<%=ImagePathArray[imgCount - i + 1]%>">
+						 		<input type="hidden" id="file0<%=i%>" name="file0<%=i%>" value="<%=ImageRealPathArray[imgCount - i + 1]%>">
+						 		<div style="text-align:left;"><span style="color : Red;">주의: 이미지를 첨부하지 않으면 글의 내용도 저장되지 않습니다.</span></div>	 <div style="text-align: right;"><br>
+						 		<textarea class="form-control" placeholder="<%=i%>번째 이미지에 대한 설명을 입력해주세요. (최대 500자)" name="comContent<%=i%>" id="comContent<%=i%>" maxlength="500"  style="resize: none;"><%if(ImageContentArray[i] == null || ImageContentArray[i].equals(".")){%><%} else {%><%=ImageContentArray[i].trim()%><%}%></textarea>					 	
+								</td>
+								</tr>
+								<%} catch (Exception e) {
+									
+								}%>
+							<%}%>
+						<%}%>						
+																			
 				</tbody>				
 			</table>			
 			<INPUT TYPE="hidden" NAME="bbsTag1" id="bbsTag1" SIZE=10 value=''>
@@ -289,7 +374,7 @@
 			document.getElementById('bbsTag5').value = tag_5.innerHTML;
 			</script>
 					
-			<input type="submit" onmouseout="check = false;"class="btn btn-primary pull-right" value="글쓰기"/>				
+			<input type="submit"  onmouseout="check = false;"class="btn btn-primary pull-right" value="글쓰기"/>				
 		 </form>
 		</div>
 	</div>	

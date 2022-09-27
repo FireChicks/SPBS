@@ -19,9 +19,14 @@
 			userID = (String) session.getAttribute("userID");
 		}
 		
-		if(userID == null) {
-			
-		}
+		if (userID == null) {
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('로그인을 하세요')");
+			script.println("location.href = 'login.jsp'");
+			script.println("</script>");
+		} else {							
+				
 		int bbsID = 0;
 		if (request.getParameter("bbsID") != null) {
 				bbsID = Integer.parseInt(request.getParameter("bbsID"));
@@ -119,8 +124,8 @@
 
 		}
 		</script>		
-		 <form name="write" id="write" method="post" action="writeAction.jsp" id="form0" onsubmit="return check()">		 
-			<table class="table table-stirped" style="text-align: center; border: 1px solid #dddddd">
+		 <form name="write" id="write" method="post" action="writeAction.jsp" id="form0" enctype="multipart/form-data" onsubmit="return check()">		 
+			<table class="table table-stirped" id="writeForm" style="text-align: center; border: 1px solid #dddddd">
 				<thead>
 					<tr>
 						<th colspan="2" style="background-color: #eeeeee; text-align: center;">게시판 글쓰기 양식</th>
@@ -233,7 +238,81 @@
 						    };
 						    						 
 						</script>									
-					</tr>														
+					</tr>
+					<tr>						
+						<td><input type="text" class="form-control" placeholder="유튜브 링크를 입력해주세요" name="youtubeLink" id="youtubeLink" maxlength="200">
+							</td>
+					</tr>
+					<script>
+					var count = 1;
+				     function addRow(){
+				    	 if(count != 0) {
+				    	 var id = "file" + count;
+				    	 var fileCheck = document.getElementById(id).value;
+					    if(!fileCheck){
+					    	alert("먼저 이미지를 추가해주세요");
+					    	return;
+					    	}
+				    	}
+					    if(count >= 10) {
+					    	alert("최대 이미지개수는 10개입니다.");
+					    	return;
+					    } else {
+					     var tableData = document.getElementById('writeForm');
+					     var row = tableData.insertRow(tableData.rows.length );
+					     
+					     var cell1 = row.insertCell(0);
+					     
+					     cell1.innerHTML = "<td><div style='text-align: left;'>"+ ++count +"번 이미지 첨부</div>"
+					     					+ "<input type='file' onChange='changeFile()'  id='file"+ count + "' name='file"+ count + "' accept='image/*'> <br>"
+					     					+ "<div style='text-align:left;'><span style='color : Red;'>주의: 이미지를 첨부하지 않으면 글의 내용도 저장되지 않습니다.</span></div> <br>"
+					     					+ "<textarea class='form-control' placeholder='" + count  +"번째 이미지에 대한 설명을 입력해주세요. (최대 500자)' name='comContent"+ count + "' id='comContent"+ count + "' maxlength='500'  style='resize: none;'></textarea>"
+					     					+"</td>";
+					     					
+					    }
+					    				
+					} 					
+					</script>
+					<script>			    
+					    function delRow(){
+						    if(count <= 0) {
+						    	alert("최소 이미지 개수는 0개 입니다.");
+						    	return;
+						    } else {
+						     var tableData = document.getElementById('writeForm');
+						     tableData.deleteRow(tableData.rows.length-1); 
+						     count--;
+						     					
+						    }						    
+					  } 					
+					</script>
+					
+				<!-- 	<script>
+					function changeFile(){
+						for(int i=1; i<=count; i++) {
+							var id = "file" + count;
+							var fileCheck = document.getElementById(id).value;
+							if(!fileCheck) {
+								tableData.deleteRow(i - (tableData.rows.length + 1));
+							} 
+						}
+						return;
+					}
+					</script>  -->
+					<tr>
+						<td>
+					<div style="text-align: left;"><input id="delROW" type="button" value="이미지 개수 제거" class="btn btn-primary pull-left" onclick="delRow();" />						 
+						 						     <input id="addROW" type="button" value="이미지 개수 추가" class="btn btn-primary pull-left" onclick="addRow();" /> </div>
+						</td>
+					</tr>
+					<tr>
+						<td>						
+							<div style="text-align: left;">1번 이미지 첨부</div>
+						 	<input type="file" id="file1" name="file1" accept="image/*" onChange="changeFile()"> <br>
+						 	<div style="text-align:left;"><span style="color : Red;">주의: 이미지를 첨부하지 않으면 글의 내용도 저장되지 않습니다.</span></div> <br>
+						 	<textarea class="form-control" placeholder="1번째 이미지에 대한 설명을 입력해주세요. (최대 500자)" name="comContent1" id="comContent1" maxlength="500"  style="resize: none;"></textarea>					 	
+						</td>						
+					</tr>																
 				</tbody>				
 			</table>			
 			<INPUT TYPE="hidden" NAME="bbsTag1" id="bbsTag1" SIZE=10 value=''>
@@ -242,7 +321,7 @@
 			<INPUT TYPE="hidden" NAME="bbsTag4" id="bbsTag4" SIZE=10 value=''>
 			<INPUT TYPE="hidden" NAME="bbsTag5" id="bbsTag5" SIZE=10 value=''>
 					
-			<input type="submit" onmouseout="check = false;"class="btn btn-primary pull-right" value="글쓰기"/>				
+			<input  type="submit" onmouseout="check = false;"class="btn btn-primary pull-right" value="글쓰기"/>				
 		 </form>
 		</div>
 	</div>	
@@ -250,6 +329,6 @@
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.js"></script>
 	
-	
+<%} %>	
 </body>
 </html>
